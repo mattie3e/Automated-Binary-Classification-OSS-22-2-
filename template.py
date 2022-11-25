@@ -1,27 +1,73 @@
 #PLEASE WRITE THE GITHUB URL BELOW!
-#
-import pandas as pd
+#https://github.com/zizi-ctrl/Automated-Binary-Classification-OSS-22-2-.git
 
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 import sys
 
 def load_dataset(dataset_path):
-	#To-Do: Implement this function
-
+	data = pd.read_csv(dataset_path)
+	
+	return data
 
 def dataset_stat(dataset_df):	
-	#To-Do: Implement this function
+	df = dataset_df
+	feature_num = df.shape[1] - 1
+	class_zero_num = len(df.loc[df['target'] == 0])
+	class_one_num = len(df.loc[df['target'] == 1])
+	return feature_num, class_zero_num, class_one_num
 
 def split_dataset(dataset_df, testset_size):
-	#To-Do: Implement this function
+	data = dataset_df
+	feature = data.drop(columns='target', axis=1)
+	label = data['target']
+	train_data, test_data, train_label, test_label = train_test_split(feature, label, test_size = testset_size)
+	return train_data, test_data, train_label, test_label
 
 def decision_tree_train_test(x_train, x_test, y_train, y_test):
-	#To-Do: Implement this function
+	model = DecisionTreeClassifier()
+	model.fit(x_train, y_train.values.ravel())
+ 
+	predict = model.predict(x_test)
+	accuracy = accuracy_score(y_test, predict)
+	precision = precision_score(y_test, predict)
+	recall = recall_score(y_test, predict)
+	
+	return accuracy, precision, recall
 
 def random_forest_train_test(x_train, x_test, y_train, y_test):
-	#To-Do: Implement this function
+	model = RandomForestClassifier()
+	model.fit(x_train, y_train.values.ravel())
+ 
+	predict = model.predict(x_test)
+	accuracy = accuracy_score(y_test, predict)
+	precision = precision_score(y_test, predict)
+	recall = recall_score(y_test, predict)
+	
+	return accuracy, precision, recall
 
 def svm_train_test(x_train, x_test, y_train, y_test):
-	#To-Do: Implement this function
+	SVM_pipe = make_pipeline(
+		StandardScaler(),
+		SVC()
+	)	
+
+	SVM_pipe.fit(x_train, y_train)
+ 
+	predict = SVM_pipe.predict(x_test)
+	accuracy = accuracy_score(y_test, predict)
+	precision = precision_score(y_test, predict)
+	recall = recall_score(y_test, predict)
+	
+	return accuracy, precision, recall
 
 def print_performances(acc, prec, recall):
 	#Do not modify this function!
